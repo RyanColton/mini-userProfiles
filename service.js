@@ -1,14 +1,16 @@
-angular.module('userProfiles').service('mainService', function($http) {
+angular.module('userProfiles').service('mainService', function($http, $q) {
   var data;
   this.getUsers = function() {
-    return $http({
+  var deferred = $q.defer();
+  $http({
       method: 'GET',
       url: 'https://reqres.in/api/users?page=1'
-    }).then(function(response){
-      data = response.data.data;
-      return response;
-    })
-  }
+  }).then(function(response) {
+    var parsedResponse = response.data.data
+    deferred.resolve(parsedResponse)
+  })
+  return deferred.promise;
+}
 
 this.toggleFavorite = function(index){
   console.log("this.data", data)
